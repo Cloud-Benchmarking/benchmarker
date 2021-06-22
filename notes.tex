@@ -1,0 +1,186 @@
+%! Author = pseudo
+%! Date = 12/18/2020
+
+% Preamble
+\documentclass[11pt]{article}
+
+% Packages
+\usepackage{amsmath}
+\usepackage[colorinlistoftodos,textsize=tiny]{todonotes}
+
+\usepackage{listings}
+\usepackage{color}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=bash,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
+
+% Document
+\begin{document}
+    \paragraph{Before the Big Kahuna}
+    \begin{enumerate}
+        \item before launch
+        \begin{enumerate}
+            \item GCP: asia-south1 / asia-northeast2 --> why not in regions json?
+            \item Add date/time to each command for better tracing
+            \item make sure every provider can handle 166+ nodes on one account
+            \item Vultr is debating if they can give me more than 100
+            \item Linode is at 50 currently
+            \item Not sure where DigitalOcean is at
+            \item have to look at GCP/Azure/AWS
+            \item make sure to enable all ipv4 on vultr for api key
+            \itm vultr needs higher traceroute timeout limits
+            \item make script to check APIs to see if any `benchmark-` nodes exist (in case errors, need to manually delete, etc)
+        \end{enumerate}
+        \item quota limits to update
+        \begin{enumerate}
+            \item lame, my aws limit is 32 vCPUs (so 32 instances); gotta bump up those rookie numbers
+            \item and 10 VMs/region for Azure
+            \item and 25 VMs total for GCP
+            \item oh, free trial for that, that makes sense for gcp
+        \end{enumerate}
+    \end{enumerate}
+TODO: Error: Error launching source instance: Unsupported: Your requested instance type (t2.micro) is not supported in your requested Availability Zone (sa-east-1b). Please retry your request by not specifying an Availability Zone or choosing sa-east-1a, sa-east-1c.
+	status code: 400, request id: d8847ccf-0ac6-48c0-93e3-b13ff4806bbe
+
+    \paragraph{Benchmarking and Graphing Tools}
+    \begin{enumerate}
+        \item # drawing world map for "flight routes"
+        \begin{enumerate}
+            \item https://observablehq.com/@d3/world-airports
+            \item https://observablehq.com/@d3/testing-projection-visibility?collection=@d3/d3-geo
+            \item https://mbostock.github.io/d3/talk/20111116/airports.html
+            \item https://vega.github.io/vega/tutorials/airports/
+        \end{enumerate}
+
+        \item # possible cloud providers
+        \begin{enumerate}
+            \item https://www.terraform.io/docs/providers/type/major-index.html
+            \item https://www.terraform.io/docs/providers/type/cloud-index.html
+            \item https://wikileaks.org/amazon-atlas/
+        \end{enumerate}
+
+        \item # some benchmarking resources
+        \begin{enumerate}
+            \item https://www.azurespeed.com/Azure/Latency
+            \item https://cloud.google.com/blog/products/networking/perfkit-benchmarker-for-evaluating-cloud-network-performance
+            \item https://github.com/GoogleCloudPlatform/PerfKitBenchmarker
+
+            \item networking benchmarks
+            \begin{enumerate}
+                \item ping
+                \item traceroute (to geolocate/plot the routes)
+                \item iperf
+                \item netperf
+                \item https://openbenchmarking.org/suite/pts/network
+            \end{enumerate}
+
+            \item cpu benchmarks
+            \begin{enumerate}
+                \item spec cpu 2017
+                \item https://openbenchmarking.org/suite/pts/single-threaded
+            \end{enumerate}
+
+            \item memory benchmarks
+            \begin{enumerate}
+                \item https://openbenchmarking.org/suite/pts/memory
+            \end{enumerate}
+
+            \item disk benchmarks
+            \begin{enumerate}
+                \item FIO
+                \item https://openbenchmarking.org/suite/pts/compression
+                \item https://openbenchmarking.org/suite/pts/disk
+            \end{enumerate}
+
+            \item misc benchmarks
+            \begin{enumerate}
+                \item https://openbenchmarking.org/suite/pts/server-cpu-tests
+                \item https://openbenchmarking.org/suite/pts/server
+            \end{enumerate}
+        \end{enumerate}
+
+        \item # geolocation tools
+        \begin{enumerate}
+            \item https://geoip2.readthedocs.io/en/latest/
+            \item https://lite.ip2location.com/file-download
+            \item https://github.com/maxmind/GeoIP2-python
+            \item https://github.com/ip2location/IP2Location-Python/
+            \item https://github.com/geopy/geopy
+            \item Azure IP Ranges and Service Tags - Public Cloud : https://www.microsoft.com/en-us/download/details.aspx?id=56519
+        \end{enumerate}
+    \end{enumerate}
+
+    \paragraph{Misc finds that inform benchmarking decisions}
+    \begin{enumerate}
+        \item https://twitter.com/linode/status/1252693011449950210?lang=en: After 60 seconds at 1500 IOPS there's a limit of 500 IOPS. Longer bursts are possible at lower I/O rates, and another burst is possible after enough time spent below 500 IOPS.
+    \end{enumerate}
+
+    \paragraph{ToDo}
+    \begin{enumerate}
+        \todo[color=green] real-time map of active routes under benchmark
+        \todo real-time stats of active benchmarks
+        \todo proxy terraform
+        \todo programatically determine which regions AWS do not allow t2.micro in and ensure they're not added to the list
+    \end{enumerate}
+
+    \paragraph{Notes}
+\begin{lstlisting}
+[x]] should have run_ssh_benchmark_cmd that prepends `time` and captures that output
+* collect metrics during benchmark (dstat, mstat, collectd, tcpdump?)
+* sample.PercentileCalculator(throughputs, [50, 90, 99])
+
+-=[ Phoronix Test Suite ]=-
+curl http://phoronix-test-suite.com/releases/repo/pts.debian/files/phoronix-test-suite_10.0.1_all.deb --output pts.deb
+apt install ~/pts.deb
+$ phoronix-test-suite benchmark network
+  Installing Test @ 14:48:55
+  [...]
+  takes too long to execute
+
+
+-=[ COREMARK ]=-
+# coremark (make PORT_DIR=linux64 ITERATIONS=1000000 XCFLAGS="-g -DUSE_PTHREAD -DPERFORMANCE_RUN=1")
+mkdir ~/installs
+curl --location https://github.com/eembc/coremark/archive/v1.01.tar.gz --output ~/installs/coremark.tar.gz
+cd ~/installs
+tar xvfz coremark.tar.gz
+cd ~/installs/coremark-1.01/
+make PORT_DIR=linux64 ITERATIONS=1000000 XCFLAGS="-g -DUSE_PTHREAD -DPERFORMANCE_RUN=1"
+cat run*.log
+
+-=[ GEEKBENCH 5]=-
+# https://cdn.geekbench.com/Geekbench-4.2.0-Linux.tar.gz
+curl --location https://cdn.geekbench.com/Geekbench-5.3.1-Linux.tar.gz --output ~/installs/geekbench.tar.gz
+tar xvfz geekbench.tar.gz
+~/Geekbench-5.3.1-Linux/geekbench5
+
+
+
+curl --location https://cdn.geekbench.com/Geekbench-4.2.0-Linux.tar.gz --output ~/installs/geekbench.tar.gz
+tar xvfz geekbench.tar.gz
+~/Geekbench-4.2.1-Linux/geekbench4
+
+
+curl --location https://cdn.geekbench.com/Geekbench-4.2.0-Linux.tar.gz --output ~/geekbench.tar.gz
+tar xvfz ~/geekbench.tar.gz
+~/Geekbench-4.2.0-Linux/geekbench4
+\end{lstlisting}
+\end{document}

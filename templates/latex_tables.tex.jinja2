@@ -1,0 +1,18 @@
+    \begin{table}[htbp]
+        \caption{\VAR{title}}
+        \begin{center}
+            \begin{tabular}{|\VAR{column_str}|}
+                \hline
+                \VAR{header_str} \\
+                \hline
+\BLOCK{for data_str in data_strs}
+                \VAR{data_str}
+\BLOCK{endfor}
+			\hline
+\BLOCK{if footnote is not none}
+            \multicolumn{\VAR{headers|length}}{l}{$^{\mathrm{a}}$\VAR{footnote}}
+\BLOCK{endif}
+            \end{tabular}
+            \label{\VAR{label}}
+        \end{center}
+    \end{table}

@@ -1,0 +1,37 @@
+image: python:latest
+
+variables:
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+
+cache:
+  paths:
+    - .cache/pip
+    - venv/
+
+stages:
+  - prepare_data
+  - compile_paper
+
+create_latex_tables:
+  stage: prepare_data
+  script:
+    - pip install -r requirements.txt
+    - python cohort_scripts/latex_table_generator.py
+  artifacts:
+    paths:
+      - paper
+    expire_in: 1 week
+
+compile_pdf:
+  stage: compile_paper
+  image: timnn/texlive
+  script:
+    - cd paper
+    - pip3 install Pygments
+    - pdflatex -synctex=1 -interaction=nonstopmode --shell-escape conference_041818.tex
+    - ls conference_041818.pdf
+  dependencies:
+    - create_latex_tables
+  artifacts:
+    paths:
+      - paper/conference_041818.pdf

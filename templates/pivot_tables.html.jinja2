@@ -1,0 +1,42 @@
+<style>
+    table {
+        border: 1px solid #666;
+    }
+    td {
+        text-align: center;
+        border: 1px solid #666;
+    }
+    td:first-child {
+        text-align: left;
+    }
+    th {
+        text-align: left;
+    }
+</style>
+{%- if by_geography -%}
+    <h1>Geographically</h1>
+{%- else -%}
+    <h1>Alphabetically</h1>
+{%- endif -%}
+
+<table>
+    <thead>
+    <tr>
+        <th>&nbsp;</th>
+        {%- for header in col_regions %}
+            <th>{% if render_headers %}{{ header }}{% endif %}</th>
+        {%- endfor %}
+    </tr>
+    </thead>
+    <tbody>
+    {%- for row in row_regions %}
+        <tr>
+            <td>{% if render_headers %}{{ row }}{% endif %}</td>
+            {%- for col in col_regions %}
+{#             (v, rgb) = data[tuple(sorted([row, col]))]#}
+            <td style='background-color: {{ get_color_values(data, [row, col], True) }}' title="{{ row }} x {{ col }}">{{ get_color_values(data, [row, col], False) }}</td>
+            {%- endfor %}
+        </tr>
+    {%- endfor %}
+    </tbody>
+</table>

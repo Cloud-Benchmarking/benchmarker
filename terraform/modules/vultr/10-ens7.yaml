@@ -1,0 +1,10 @@
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    ens7:
+      match:
+        macaddress: ff:ff:ff:ff:ff:ff
+      mtu: 1450
+      dhcp4: no
+      addresses: [x.x.x.x/16]
